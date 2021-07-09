@@ -1,4 +1,6 @@
 # HexCity
+![HexCity by Tom Peak](https://www.tompeak.com//media/HexCityPreview.mp4)
+
 HexCity Processing P3D
 2021 by Tom Peak
 
@@ -11,5 +13,7 @@ Press x to distribute all hexagons randomly on z.
 OSC: /xplode
 
 Port: 6666
+
+
 
 
