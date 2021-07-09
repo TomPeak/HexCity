@@ -2,7 +2,7 @@
 
 ![HexCity by Tom Peak](/media/preview.gif)
 
-[preView]:https://www.tompeak.com//media/HexCityPreview.mp4
+[preView]: https://www.tompeak.com//media/HexCityPreview.mp4
 
 ## HexCity 
 ### Processing P3D
