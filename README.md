@@ -16,7 +16,10 @@ OSC: /xplode
 
 Port: 6666
 
-[preView]: https://www.tompeak.com//media/HexCityPreview.mp4
+### Have fun!
+
+short video:
+https://www.tompeak.com//media/HexCityPreview.mp4
 
 
 
