@@ -1,4 +1,12 @@
 # HexCity
+
+<figure class="video_container">
+  <video controls="true" allowfullscreen="true" poster="path/to/poster_image.png">
+    <source src="https://www.tompeak.com/media/HexCityPreview.mp4" type="video/mp4">
+ 
+  </video>
+</figure>
+
 ![HexCity by Tom Peak](https://www.tompeak.com//media/HexCityPreview.mp4)
 
 HexCity Processing P3D
