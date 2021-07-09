@@ -16,6 +16,8 @@ OSC: /xplode
 
 Port: 6666
 
+Tweens with Ani http://www.looksgood.de/libraries/Ani/
+
 ### Have fun!
 
 short video:
