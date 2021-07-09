@@ -104,11 +104,16 @@ class Hex{
     hexAni2.start();
   }
   
-  // Animation für anseinader 
+  // Animation für aus ein an der 
   void  xplode(){
     home = true;
+<<<<<<< HEAD
     if( hexAni != null ) {hexAni.pause(); hexAni = null;} // delete old ani
     hexAni2 = Ani.to(this, 1.0, "z",4000-random(8000), Ani.EXPO_IN_OUT);
+=======
+    if( hexAni != null ) {hexAni.pause(); hexAni = null;}
+    hexAni2 = Ani.to(this, 1.0, "z",4000-random(8000), Ani.EXPO_IN_OUT); // +-4000 Zufall
+>>>>>>> 8e1fa7b7b47bec6b8a85da4aa0afbeeb214d9661
     rotEnd *= -1;
     hexAniRot =  Ani.to(this, 1.0, "angle",rotEnd * 3, Ani.ELASTIC_IN_OUT);
     hexAni2.setPlayMode(Ani.FORWARD);

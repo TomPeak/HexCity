@@ -2,7 +2,8 @@
 
 ![HexCity by Tom Peak](/media/preview.gif)
 
-HexCity Processing P3D
+## HexCity 
+### Processing P3D
 2021 by Tom Peak
 
 Processing patch for a nice endless animation with two functions.
@@ -14,6 +15,11 @@ Press x to distribute all hexagons randomly on z.
 OSC: /xplode
 
 Port: 6666
+
+### Have fun!
+
+short video:
+https://www.tompeak.com//media/HexCityPreview.mp4
 
 
 
