@@ -65,24 +65,27 @@ class Hex{
            s.setStrokeWeight(3);
            s.setFill(color(0,170,250,0.9));
        }
-       
      } 
-     if(hexAni2 != null) if(hexAni2.isEnded()) {
-       home = false; hexAni2 = null;
+     if(hexAni2 != null) if(hexAni2.isEnded()) { //Rotation zu Ende beim close … I am home!
+       home = false; hexAni2 = null;         
      }
    popMatrix(); 
   }
+  
   // Animation für neue Z-Position
-  void  startScale(float r){
+  void  doMoveZ(float newZPos){
     // Hex wird transparent
     s.setStroke(color(0,160,220));
     s.setStrokeWeight(10);
     s.setFill(color(0,0,0,1));
-    // rotion nach länge berechen
-    int twist =int(floor(r-z)/1700);
-    hexAni =  Ani.to(this, 9.0, "z",r, Ani.EXPO_IN_OUT);
+    // rotation nach Weglänge berechen
+    float spin = 700; // Wert ist zu speilen 
+    
+    int twist;
+    if(newZPos>z) twist = int(floor(newZPos-z)/spin); else twist = int(floor(z - newZPos)/spin);
+    hexAni =  Ani.to(this, 9.0, "z",newZPos, Ani.EXPO_IN_OUT);
     rotEnd *= -1;
-    hexAniRot =  Ani.to(this, 8.0, "angle", rotEnd * twist , Ani.ELASTIC_IN_OUT);
+    hexAniRot =  Ani.to(this, 8.6, "angle", rotEnd * twist , Ani.LINEAR);
     hexAni.setPlayMode(Ani.FORWARD);
     hexAniRot.start();
     hexAni.start();
@@ -104,7 +107,7 @@ class Hex{
   // Animation für anseinader 
   void  xplode(){
     home = true;
-    if( hexAni != null ) {hexAni.pause(); hexAni = null;}
+    if( hexAni != null ) {hexAni.pause(); hexAni = null;} // delete old ani
     hexAni2 = Ani.to(this, 1.0, "z",4000-random(8000), Ani.EXPO_IN_OUT);
     rotEnd *= -1;
     hexAniRot =  Ani.to(this, 1.0, "angle",rotEnd * 3, Ani.ELASTIC_IN_OUT);
@@ -121,7 +124,7 @@ void setup(){
   float y = 0; 
   
   oscP5 = new OscP5(this,6666);
-  Ani.init(this); // Ani init st wichtig
+  Ani.init(this); // Ani init ist wichtig!!!
   
   for(int ix = 0; ix < hex.length; ix++){
     y = 0 ;
@@ -179,22 +182,28 @@ void draw(){
     for(int x = 0; x < hex.length; x++){
       for(int y = 0; y < hex[0].length; y ++){
         if(doChange(1000,2) && !hex[x][y].home){ // Neu position und nicht am heinmfahren
-          if (hex[x][y].z <= 0) // Wenn oben dann  nach unten bei 0 rauf (home)
+          if (hex[x][y].z <= 0) // Wenn oben dann nach unten / bei 0 rauf (home)
               newZ = int(random(stopPoses)) * distanceZ; //int(random(stopPos)) = 70 Positionen z mit Abstand 80
           else newZ = int(random (stopPoses)) * distanceZ*-1;
-          hex[x][y].startScale(newZ);
+          hex[x][y].doMoveZ(newZ);
         }
         hex[x][y].draw();
       }
       offSet *=-1;
    }  
  popMatrix(); 
+ if(keyPressed){
+   switch(key){
+     case 'c' : home();
+       break;
+     case 'x' : xplode();
+       break;
+   }   
+ }
 }
 
 //OSC
 void oscEvent(OscMessage theOscMessage) {
-  /* print the address pattern and the typetag of the received OscMessage */
- // print("### received an osc message.");
  if(theOscMessage.checkAddrPattern("/xplode")) xplode();
  if(theOscMessage.checkAddrPattern("/close")) home();
 }
