@@ -60,13 +60,13 @@ class Hex{
       rotateZ(angle*PI/180);
       shape(s,0,0);
       if(hexAniRot != null){ 
-        if(hexAniRot.isEnded()){
+        if(hexAniRot.isEnded()){ // Stehend sind die Hexagons gefüllt
            s.setStroke(color(180,180,250,0.7));
            s.setStrokeWeight(3);
-           s.setFill(color(0,170,250,0.9));
+           s.setFill(color(0,170,250,0.9)); // helles leichtes aber durchlässiges(aplha/opacity) grünblau
        }
      } 
-     if(hexAni2 != null) if(hexAni2.isEnded()) { //Rotation zu Ende beim close … I am home!
+     if(hexAni2 != null) if(hexAni2.isEnded()) { // Animation zu Ende beim close … I am home!
        home = false; hexAni2 = null;         
      }
    popMatrix(); 
@@ -79,7 +79,7 @@ class Hex{
     s.setStrokeWeight(10);
     s.setFill(color(0,0,0,1));
     // rotation nach Weglänge berechen
-    float spin = 1500; // Wert ist zu speilen 
+    float spin = 1500; // Wert ist zu spielen = Länge/Spin = Anzahl der 60° Drehungen = twist 
     
     int twist;
     if(newZPos>z) twist = int(floor(newZPos-z)/spin); else twist = int(floor(z - newZPos)/spin);
@@ -163,12 +163,13 @@ void draw(){
   clear();
   background(0);
   blendMode(SCREEN);
-  lightFalloff(1.5, 0.01, 0.0);
+  smooth();
   
   pushMatrix();
-    noClip();
+    lightFalloff(1.0, 0.05, 0.0);
+    clip(-width,-height,width*2,height*2);
     lights();
-    lightSpecular(255, 255, 255);
+    lightSpecular(155, 155, 155);
      // Camera move
     translate(0,0,-500);
     rotateX(frameCount*0.008);
