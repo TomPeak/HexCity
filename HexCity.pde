@@ -7,13 +7,13 @@ import processing.video.*;
 OscP5 oscP5;
 NetAddress myRemoteLocation;
 
-float radius = 60;
+float radius = 40;
 float heightHex = sqrt(3) * radius;
-float space = 1.4;
+float space = 1.2;
 float offSet = heightHex /2;
-Hex[][] hex = new Hex[30][30]; // 30 x 30 Feld
-  
-
+Hex[] hex = new Hex[200]; // 30 x 30 Feld
+SyphonServer server;
+// https://www.redblobgames.com/grids/hexagons/
 // das Hexagon
 class Hex{
   float x;
@@ -117,40 +117,47 @@ class Hex{
 }
 
 void setup(){
-  size(1025,768,P3D);
+  size(640,480,P3D);
   frameRate(30);
   background(0);
   float x = 0;
-  float y = 0; 
-  
+  float y = 0;
+  float rField = radius * sqrt(3) * 2;
+  float angleField = 60;
+  float angleBuild = 0;
+  int count = 6;
+  float offset = 30;
+   server = new SyphonServer(this, "Processing HexCity");
   oscP5 = new OscP5(this,6666);
   Ani.init(this); // Ani init ist wichtig!!!
-  
-  for(int ix = 0; ix < hex.length; ix++){
-    y = 0 ;
-    x += ( 3 * radius);
-    for(int iy = 0; iy < hex[0].length; iy ++ ){
-      y += heightHex*2;
-      hex[ix][iy] = new Hex(x-hex.length*space*radius,y-hex[0].length*space*radius,radius);      
+  hex[0] = new Hex(x,y,radius);
+  for(int i = 1; i < hex.length; i++){ 
+      x = (float)( rField * Math.cos((angleBuild+offset) * PI / 180));
+      y = (float)( rField * Math.sin((angleBuild+offset) * PI / 180));
+      hex[i] = new Hex(x,y,radius);
+      if(i>=count){
+        print("count" + count + " rField:" + rField + " angel" + angleField );
+        count *=2;
+        rField += radius * sqrt(3) * 2;
+        angleField = 360/count;
+        angleBuild = 0;
+        offset *= -1;
+      }else  angleBuild += angleField;
     }
   } 
-}
 
 // get triggerd on key "c" and OCS "/close"
 void home(){
-  for(int ix = 0; ix < hex.length; ix++){
-    for(int iy = 0; iy < hex[0].length; iy ++ ){
-        hex[ix][iy].goHome(); 
+  for(int i = 0; i < hex.length; i++){
+   
+        hex[i].goHome(); 
     }
-  }
 }
 
 // get triggerd on key "cx" and OCS "/xplode"
 void xplode(){
-  for(int ix = 0; ix < hex.length; ix++){
-    for(int iy = 0; iy < hex[0].length; iy ++ ){
-        hex[ix][iy].xplode(); 
-    }
+  for(int i = 0; i < hex.length; i++){
+        hex[i].xplode(); 
   }
 }
 
@@ -180,18 +187,18 @@ void draw(){
     float distanceZ = 80;
     int stopPoses = 70;
    
-    for(int x = 0; x < hex.length; x++){
-      for(int y = 0; y < hex[0].length; y ++){
-        if(doChange(1000,2) && !hex[x][y].home){ // Neu position und nicht am heinmfahren
-          if (hex[x][y].z <= 0) // Wenn oben dann nach unten / bei 0 rauf (home)
+    for(int i = 0; i < hex.length; i++){
+  
+      /*if(doChange(1000,2) && !hex[i].home){ // Neu position und nicht am heinmfahren
+          if (hex[i].z <= 0) // Wenn oben dann nach unten / bei 0 rauf (home)
               newZ = int(random(stopPoses)) * distanceZ; //int(random(stopPos)) = 70 Positionen z mit Abstand 80
           else newZ = int(random (stopPoses)) * distanceZ*-1;
-          hex[x][y].doMoveZ(newZ);
-        }
-        hex[x][y].draw();
+          hex[i].doMoveZ(newZ);
+        }*/
+        hex[i].draw();
       }
-      offSet *=-1;
-   }  
+   
+    
  popMatrix(); 
  if(keyPressed){
    switch(key){
@@ -201,6 +208,7 @@ void draw(){
        break;
    }   
  }
+ server.sendScreen();
 }
 
 //OSC
