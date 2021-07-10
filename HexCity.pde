@@ -12,7 +12,7 @@ float heightHex = sqrt(3) * radius;
 float space = 1.2;
 float offSet = heightHex /2;
 Hex[] hex = new Hex[200]; // 30 x 30 Feld
-SyphonServer server;
+//SyphonServer server;
 // https://www.redblobgames.com/grids/hexagons/
 // das Hexagon
 class Hex{
@@ -29,7 +29,7 @@ class Hex{
   float angle = 0;
   float rotEnd = 60;
   PShape s;
-  
+ 
   Hex(float xi,float yi,float gs) {
     radius = gs;
     movingR = gs;
@@ -49,17 +49,22 @@ class Hex{
     s.vertex(-2 * radius, 0);
     s.vertex( - radius,  - sqrt(3) * radius);
     s.endShape(CLOSE);
-    s.setFill(color(0,170,250,0.9)); // RotGrünBlau 0 - 255 Alpha 0.0 - 1.0
+    s.setFill(color(100,170,250,0.6)); // RotGrünBlau 0 - 255 Alpha 0.0 - 1.0
     s.setStroke(color(180,180,250,0.9));
     s.setStrokeWeight(3);
+  
+    
+    
+
   }
  
   void draw(){
+    //println(x + " ------ " + y);
     pushMatrix(); // push und popMatrix klammern eine XYZAchse in der Befehlskette von Transformation  … P3D magic
       translate(x * space , (y + offSet )* space ,z);
-      rotateZ(angle*PI/180);
+      //rotateZ(angle*PI/180);
       shape(s,0,0);
-      if(hexAniRot != null){ 
+      /*if(hexAniRot != null){ 
         if(hexAniRot.isEnded()){ // Stehend sind die Hexagons gefüllt
            s.setStroke(color(180,180,250,0.7));
            s.setStrokeWeight(3);
@@ -68,7 +73,7 @@ class Hex{
      } 
      if(hexAni2 != null) if(hexAni2.isEnded()) { // Animation zu Ende beim close … I am home!
        home = false; hexAni2 = null;         
-     }
+     }*/
    popMatrix(); 
   }
   
@@ -120,30 +125,49 @@ void setup(){
   size(640,480,P3D);
   frameRate(30);
   background(0);
+  int count = 0;
+  float r = 0;
+ float g = 0;
+ float b = 0;
+  
+    PVector[] cube_d = new PVector[30];
+    cube_d[0] = new PVector(+1, -1, 0);
+    cube_d[1] = new PVector(+1, 0, -1); 
+    cube_d[2] = new PVector(0, +1, -1); 
+    cube_d[3] = new PVector(-1, +1, 0);
+    cube_d[4] = new PVector(-1, 0, +1);
+    cube_d[5] = new PVector(0, -1, +1); 
   float x = 0;
   float y = 0;
-  float rField = radius * sqrt(3) * 2;
-  float angleField = 60;
-  float angleBuild = 0;
-  int count = 6;
-  float offset = 30;
-   server = new SyphonServer(this, "Processing HexCity");
-  oscP5 = new OscP5(this,6666);
-  Ani.init(this); // Ani init ist wichtig!!!
-  hex[0] = new Hex(x,y,radius);
-  for(int i = 1; i < hex.length; i++){ 
-      x = (float)( rField * Math.cos((angleBuild+offset) * PI / 180));
-      y = (float)( rField * Math.sin((angleBuild+offset) * PI / 180));
-      hex[i] = new Hex(x,y,radius);
-      if(i>=count){
-        print("count" + count + " rField:" + rField + " angel" + angleField );
-        count *=2;
-        rField += radius * sqrt(3) * 2;
-        angleField = 360/count;
-        angleBuild = 0;
-        offset *= -1;
-      }else  angleBuild += angleField;
-    }
+  hex[count] = new Hex(0,0,radius);
+ for(int i = 1; i < 2; i++){ 
+     for(int s=0;s<i*6;s++){
+       count++;
+       println();
+       int dir = 0;
+       float a = (360 / (i*6)) * (s) - 30;
+        println("angle" +a);
+       if(a>=-30 && a<30) dir = 0;
+       if(a>=30 && a<90) dir = 1;
+       if(a>=90 && a<150) dir = 2;
+       if(a>=150 && a<210) dir = 3;
+       if(a>=210 && a<270) dir = 4;
+       if(a>=270) dir = 5;
+       println(dir + "Direction");
+       r = (float)cube_d[dir].x;
+        g = cube_d[dir].y;
+         b = cube_d[dir].z;
+       
+       y = 3/2 * radius*2 * b;
+       b = 2/3 * y / radius;
+        x = sqrt(3) * radius*2 * ( b/2 + r);
+        
+        Hex t = new Hex(x,y,radius);
+       hex[count] = t;
+       println(hex.length + "  " + x + " " + y);
+       
+       }
+     }
   } 
 
 // get triggerd on key "c" and OCS "/close"
@@ -179,9 +203,7 @@ void draw(){
     lightSpecular(155, 155, 155);
      // Camera move
     translate(0,0,-500);
-    rotateX(frameCount*0.008);
-    rotateY(frameCount*0.006);
-    rotateZ(frameCount*0.02);
+   
     
     float newZ;
     float distanceZ = 80;
@@ -195,7 +217,7 @@ void draw(){
           else newZ = int(random (stopPoses)) * distanceZ*-1;
           hex[i].doMoveZ(newZ);
         }*/
-        hex[i].draw();
+       if( hex[i]!=null) hex[i].draw();
       }
    
     
@@ -208,7 +230,7 @@ void draw(){
        break;
    }   
  }
- server.sendScreen();
+ //server.sendScreen();
 }
 
 //OSC
